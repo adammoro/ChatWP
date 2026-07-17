@@ -1,25 +1,47 @@
 # ChatWP WordPress Plugin #
 
-A WordPress plugin that displays text from OpenAI's Completions API. Enter your OpenAI API key in the settings and then add as many prompt-specific widget instances as you'd like! Each widget instance can be configured with its own prompt and OpenAI configs.
+A WordPress plugin that displays LLM-generated text in a sidebar widget. Each
+widget instance picks its own provider and model — OpenAI, Anthropic
+(Claude), a local Ollama install, or any other self-hosted model that speaks
+the OpenAI-compatible chat API (LM Studio, vLLM, text-generation-webui, etc).
 
 ## Usage ##
 
-Using this plugin is simple. Follow these quick steps to get AI generated text on your WordPress website.
+1. Download the `chatwp` folder (or `ChatWP.zip`, which contains the same
+   folder), upload it to your `wp-content/plugins` directory, and activate
+   the ChatWP plugin from the Plugins screen.
 
-1. Download the folder `chatwp` folder (or the ChatWP.zip file which has that folder in it as well), upload it to your `wp-plugins` folder, and then Activate the ChatWP plugin in the Plugins section.
+2. Go to **Settings → ChatWP** and fill in the credentials for whichever
+   provider(s) you plan to use:
+   - **OpenAI API Key** — for OpenAI models.
+   - **Anthropic API Key** — for Claude models.
+   - **Ollama Base URL** — defaults to `http://localhost:11434`, the default
+     address of a local [Ollama](https://ollama.com) install. Pull a model
+     first (e.g. `ollama pull llama3.1`).
+   - **Custom Endpoint Base URL** (+ optional API key) — for any other
+     OpenAI-compatible `/chat/completions` endpoint, such as LM Studio,
+     vLLM, or text-generation-webui.
 
-2. Go to Settings->ChatWP and add your OpenAI API key.
+   You only need to configure the providers you actually plan to use.
 
-3. Once your API key is saved, go to Appearance->Widgets and look for a widget named "ChatWP Widget". Enter your prompt and any other settings you want to adjust for that widget's specific call to the API. Default values have been provided and work great. Just update the prompt and you're good!.
+3. Go to **Appearance → Widgets**, add a "ChatWP Widget", and configure it:
+   - **LLM Provider** — pick OpenAI, Anthropic, Ollama, or Custom Endpoint.
+   - **Model** — the model name/id understood by that provider (e.g.
+     `gpt-4o-mini`, `claude-sonnet-4-5`, `llama3.1`).
+   - **System Prompt** (optional) and **Prompt** — what gets sent to the model.
+   - **Temperature**, **Max Tokens**, and (for OpenAI/custom endpoints)
+     **Frequency Penalty** / **Presence Penalty**.
 
+   Add as many widget instances as you like, each with its own provider,
+   model, and prompt.
 
-## OpenAI API Parameters Explained ##
+## Generation parameters ##
 
-Here's a summary of the parameters passed in a call to the OpenAI API:
-
-1. 'model': Specifies the OpenAI model to use (e.g., 'text-davinci-003').
-2. 'prompt': The input text or context for the model to generate a response.
-3. 'temperature': Controls the randomness or creativity of the generated text.
-4. 'max_tokens': Limits the length of the generated text, measured in tokens.
-5. 'frequency_penalty': Penalizes tokens based on their frequency in the training data.
-6. 'presence_penalty': Penalizes the model for repeating tokens or phrases.
+- **model**: The provider-specific model name/id to use.
+- **prompt**: The user message sent to the model.
+- **system_prompt**: Optional system/instructions message.
+- **temperature**: Controls the randomness/creativity of the output.
+- **max_tokens**: Caps the length of the generated response.
+- **frequency_penalty** / **presence_penalty**: Only sent to OpenAI and
+  custom OpenAI-compatible endpoints — Anthropic's and Ollama's chat APIs
+  don't support these.
